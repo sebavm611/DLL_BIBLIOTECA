@@ -9,7 +9,6 @@ struct libro{
 	char nombre[50];
 };
 
-
 struct nodo{
 	libro *dato;
 	nodo *ant;
@@ -19,16 +18,20 @@ struct nodo{
 nodo *inicio = NULL;
 nodo *final = NULL;
 
-nodo* esExistente(int id){
+bool esExistente(int id){
+	if(inicio==NULL){
+		return false;
+	}
+	
 	nodo *aux = inicio;
-	while(aux!=NULL || aux->dato->libro_id!=id){
+	while((aux!=NULL) && (aux->dato->libro_id!=id)){
 		aux = aux->sig;
 	}
 	
-	if(aux->dato->libro_id==id){
-		return aux;
+	if(aux==NULL){
+		return false;
 	}
-	return NULL;
+	return true;
 }
 
 void crearLibro(libro *l){
@@ -51,6 +54,10 @@ void crearLibro(libro *l){
 	
 	cout<<"Ingrese el nombre del libro: ";
 	gets(nombre);
+	
+	l->libro_id = id;
+	strcpy(l->autor,autor);
+	strcpy(l->nombre,nombre);
 }
 
 void ingresarInicio(){
@@ -71,12 +78,58 @@ void ingresarInicio(){
 	
 }
 
-int main(){
-	
-	
+void ingresarFinal(){
+	nodo *nuevo = (nodo*) malloc(sizeof(nodo));
+	nuevo->dato = (libro*) malloc(sizeof(libro));
+	crearLibro(nuevo->dato);
+	if(inicio==NULL){
+		inicio = nuevo;
+		inicio->ant = NULL;
+		inicio->sig = NULL;
+		final = inicio;
+	}else{
+		nuevo->ant = final;
+		nuevo->sig = NULL;
+		final->sig=nuevo;
+		final=nuevo;
+	}
 }
 
+void imprimirLibro(libro *l){
+	cout<<"Id del libro: ";
+	cout<<l->libro_id<<endl;
+	
+	cout<<"Autor del libro: ";
+	cout<<l->autor<<endl;
+	
+	cout<<"Nombre del libro: ";
+	cout<<l->nombre<<endl;
+}
 
+void imprimirInicio(){
+	nodo *aux = inicio;
+	while(aux!=NULL){
+		imprimirLibro(aux->dato);
+		aux = aux->sig;
+	}
+	cout<<"\n";
+}
+
+void imprimirFinal(){
+	nodo *aux = final;
+	while(aux!=NULL){
+		imprimirLibro(aux->dato);
+		aux = aux->ant;
+	}
+	cout<<"\n";
+}
+
+int main(){
+	ingresarInicio();
+	ingresarInicio();
+	imprimirInicio();
+	
+}
 
 
 
