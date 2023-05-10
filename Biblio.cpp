@@ -104,6 +104,7 @@ void imprimirLibro(libro *l){
 	
 	cout<<"Nombre del libro: ";
 	cout<<l->nombre<<endl;
+	cout<<"\n";
 }
 
 void imprimirInicio(){
@@ -112,7 +113,7 @@ void imprimirInicio(){
 		imprimirLibro(aux->dato);
 		aux = aux->sig;
 	}
-	cout<<"\n";
+	//cout<<"\n";
 }
 
 void imprimirFinal(){
@@ -121,14 +122,62 @@ void imprimirFinal(){
 		imprimirLibro(aux->dato);
 		aux = aux->ant;
 	}
-	cout<<"\n";
+	//cout<<"\n";
 }
 
+nodo* buscarLibro(int id){
+	
+	nodo *aux = inicio;
+	while((aux!=NULL) && (aux->dato->libro_id!=id)){
+		aux = aux->sig;
+	}
+	
+	return aux;	
+}
+
+bool eliminarLibro(int id){
+	nodo *aux = buscarLibro(id);
+	if(aux==NULL){
+		return false;
+	}
+	
+	if(aux->ant==aux->sig){
+		inicio = NULL;
+		free(inicio);
+		return true;
+	}
+	
+	if(aux->ant==NULL){
+		aux = inicio->sig;
+		aux->ant = NULL;
+		free(inicio);
+		inicio = aux;
+		return true;
+	}
+	
+	if(aux->sig==NULL){
+		aux = final->ant;
+		aux->sig = NULL;
+		free(final);
+		final = aux;
+		return true;
+	}
+		
+	aux->ant->sig = aux->sig;
+	aux->sig->ant = aux->ant;
+	free(aux);
+	
+	return true;
+}
+
+
 int main(){
-	ingresarInicio();
-	ingresarInicio();
+	ingresarFinal();
+	ingresarFinal();
 	imprimirInicio();
 	
+	cout<<eliminarLibro(2)<<"\n";
+	imprimirInicio();
 }
 
 
